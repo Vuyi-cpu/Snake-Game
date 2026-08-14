@@ -7,6 +7,7 @@ public class SnakeDeath : MonoBehaviour
 {
     [Header("Player")]
     public int playerNumber = 1;
+    public string snakeName = "Blue";
     public int startingLives = 4;
 
     [Header("References")]
@@ -82,8 +83,7 @@ public class SnakeDeath : MonoBehaviour
     {
         if (livesText != null)
         {
-            livesText.text = "Player " + playerNumber +
-                             " Lives: " + currentLives;
+            livesText.text = "" + currentLives;
         }
     }
 }

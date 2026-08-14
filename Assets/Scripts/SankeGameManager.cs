@@ -1,5 +1,6 @@
+using System.Collections;
 using UnityEngine;
-using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SnakeGameManager : MonoBehaviour
 {
@@ -7,15 +8,21 @@ public class SnakeGameManager : MonoBehaviour
     public SnakeMovement player1Movement;
     public SnakeMovement player2Movement;
 
-    [Header("Game Over UI")]
-    public GameObject gameOverPanel;
-    public TMP_Text winnerText;
+    [Header("Game Over Panels")]
+    public GameObject brownGameOverPanel;
+    public GameObject blueGameOverPanel;
+    public GameObject drawGameOverPanel;
 
+    private bool player1Lost;
+    private bool player2Lost;
     private bool gameHasEnded;
+    private bool resultCheckStarted;
 
     void Start()
     {
-        gameOverPanel.SetActive(false);
+        brownGameOverPanel.SetActive(false);
+        blueGameOverPanel.SetActive(false);
+        drawGameOverPanel.SetActive(false);
     }
 
     public void GameOver(int losingPlayer)
@@ -23,22 +30,56 @@ public class SnakeGameManager : MonoBehaviour
         if (gameHasEnded)
             return;
 
-        gameHasEnded = true;
+        if (losingPlayer == 1)
+        {
+            player1Lost = true;
+        }
+        else if (losingPlayer == 2)
+        {
+            player2Lost = true;
+        }
 
-        Debug.Log("Game over received. Losing player: " + losingPlayer);
-
+     
         player1Movement.enabled = false;
         player2Movement.enabled = false;
 
-        gameOverPanel.SetActive(true);
+        if (!resultCheckStarted)
+        {
+            resultCheckStarted = true;
+            StartCoroutine(CheckGameResult());
+        }
+    }
 
-        if (losingPlayer == 1)
+    private IEnumerator CheckGameResult()
+    {
+        yield return new WaitForEndOfFrame();
+
+        gameHasEnded = true;
+
+        if (player1Lost && player2Lost)
         {
-            winnerText.text = "Green Snake Wins!";
+            drawGameOverPanel.SetActive(true);
         }
-        else if (losingPlayer == 2) 
+        else if (player1Lost)
         {
-            winnerText.text = "Blue Snake Wins!";
+           
+            brownGameOverPanel.SetActive(true);
         }
+        else if (player2Lost)
+        {
+  
+            blueGameOverPanel.SetActive(true);
+        }
+    }
+
+    public void ReplayGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exit button clicked.");
+        Application.Quit();
     }
 }
