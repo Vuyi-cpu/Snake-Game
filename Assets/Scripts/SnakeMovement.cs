@@ -9,9 +9,10 @@ public class SnakeMovement : MonoBehaviour
     public InputScheme inputScheme = InputScheme.WASD;
 
     [Header("Grid")]
+    public Grid tilemapGrid;              
     public Vector2Int startCell = Vector2Int.zero;
     public Vector2Int startDirection = Vector2Int.right;
-    public float cellSize = 1f;
+    public float cellSize = 1f;          
 
     [Header("Speed")]
     public float movesPerSecond = 8f;
@@ -98,6 +99,17 @@ public class SnakeMovement : MonoBehaviour
 
     Vector3 GridToWorld(Vector2Int cell)
     {
-        return new Vector3(cell.x * cellSize, cell.y * cellSize, 0f);
+        if (tilemapGrid != null)
+        {
+          
+            return tilemapGrid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, 0));
+        }
+
+        
+        return new Vector3(
+            (cell.x + 0.5f) * cellSize,
+            (cell.y + 0.5f) * cellSize,
+            0f
+        );
     }
 }

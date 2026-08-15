@@ -2800,6 +2800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnakeMovement
   inputScheme: 0
+  tilemapGrid: {fileID: 0}
   startCell: {x: 0, y: 1}
   startDirection: {x: 1, y: 0}
   cellSize: 1
@@ -2946,7 +2947,7 @@ Transform:
   m_GameObject: {fileID: 1995698447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.49, y: -0.46, z: 0}
+  m_LocalPosition: {x: 0.52, y: 1.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10169,6 +10170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnakeMovement
   inputScheme: 1
+  tilemapGrid: {fileID: 0}
   startCell: {x: 0, y: -1}
   startDirection: {x: 1, y: 0}
   cellSize: 1
@@ -10315,7 +10317,7 @@ Transform:
   m_GameObject: {fileID: 2030534260}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.46, y: 2.46, z: 0}
+  m_LocalPosition: {x: 0.48, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
