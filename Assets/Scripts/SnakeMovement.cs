@@ -27,6 +27,10 @@ public class SnakeMovement : MonoBehaviour
     public Vector2Int Direction => direction;
     public Vector2Int GridPosition => gridPosition;
 
+    public Vector2Int PreviousGridPosition => previousGridPosition;
+    public float MoveTimer => moveTimer;
+
+
     void Start()
     {
         ResetState();

@@ -34,17 +34,23 @@ public class SnakeBody : MonoBehaviour
     public Sprite tailRight;
 
     private List<GameObject> segments = new List<GameObject>();
+
+    // Position history.
+    // Index 0 = head
+    // Index 1 = first body segment
+    // Index 2 = second body segment
+    // etc.
     private List<Vector2Int> positionHistory = new List<Vector2Int>();
 
     private Vector2Int lastHeadPosition;
 
-    // How many new segments should be added.
+    // How many segments still need to be added.
     private int pendingGrowth = 0;
 
 
-    // ==================================================
+    // =========================================================
     // START
-    // ==================================================
+    // =========================================================
 
     void Start()
     {
@@ -57,9 +63,9 @@ public class SnakeBody : MonoBehaviour
     }
 
 
-    // ==================================================
+    // =========================================================
     // UPDATE
-    // ==================================================
+    // =========================================================
 
     void Update()
     {
@@ -68,56 +74,65 @@ public class SnakeBody : MonoBehaviour
 
         UpdateHeadSprite();
 
-        Vector2Int currentHeadPosition = snakeMovement.GridPosition;
+        Vector2Int currentHeadPosition =
+            snakeMovement.GridPosition;
 
-        // The snake has moved to a new grid cell.
+        // The head entered a new grid cell.
         if (currentHeadPosition != lastHeadPosition)
         {
-            // Add the new head position to the history.
             positionHistory.Insert(0, currentHeadPosition);
 
             lastHeadPosition = currentHeadPosition;
 
-            // If the snake has eaten food, create the
-            // new segment now that the snake has moved.
+            // If food was eaten, add the new segment now.
             if (pendingGrowth > 0)
             {
                 CreateGrowthSegment();
-
                 pendingGrowth--;
             }
-
-            UpdateBody();
         }
+
+        UpdateBodyPositions();
     }
 
 
-    // ==================================================
-    // GROW
-    // ==================================================
+    // =========================================================
+    // GROWTH
+    // =========================================================
 
     public void Grow()
     {
-        // Don't create the segment immediately.
-        // Instead, tell the snake that it needs to grow
-        // on its next movement.
+        // Don't create a segment immediately.
+        //
+        // This prevents a new segment from appearing on top
+        // of the head when food is eaten.
         pendingGrowth++;
     }
 
 
-    // ==================================================
-    // CREATE NEW SEGMENT
-    // ==================================================
+    // =========================================================
+    // CREATE SEGMENT
+    // =========================================================
 
     void CreateGrowthSegment()
     {
+        // Spawn the segment at the current tail position.
+        Vector3 spawnPosition = transform.position;
+
+        if (positionHistory.Count > 1)
+        {
+            Vector2Int tailPosition =
+                positionHistory[positionHistory.Count - 1];
+
+            spawnPosition = GridToWorld(tailPosition);
+        }
+
         GameObject newSegment = Instantiate(
             segmentPrefab,
-            transform.position,
+            spawnPosition,
             Quaternion.identity
         );
 
-        // Set the owner of this segment.
         SnakeBodySegment segment =
             newSegment.GetComponent<SnakeBodySegment>();
 
@@ -130,13 +145,13 @@ public class SnakeBody : MonoBehaviour
     }
 
 
-    // ==================================================
-    // RESET BODY
-    // ==================================================
+    // =========================================================
+    // RESET
+    // =========================================================
 
     public void ResetBody()
     {
-        // Destroy existing segments.
+        // Remove existing body segments.
         foreach (GameObject segment in segments)
         {
             if (segment != null)
@@ -147,10 +162,8 @@ public class SnakeBody : MonoBehaviour
 
         segments.Clear();
 
-        // Cancel any pending growth.
         pendingGrowth = 0;
 
-        // Clear movement history.
         positionHistory.Clear();
 
         Vector2Int headPosition =
@@ -158,10 +171,10 @@ public class SnakeBody : MonoBehaviour
 
         lastHeadPosition = headPosition;
 
-        // Add head position.
+        // Add the head.
         positionHistory.Add(headPosition);
 
-        // Build starting body positions behind the head.
+        // Build the starting body behind the head.
         Vector2Int backwards =
             -snakeMovement.Direction;
 
@@ -172,20 +185,128 @@ public class SnakeBody : MonoBehaviour
             );
         }
 
-        // Create starting body segments.
+        // Create the starting body.
         for (int i = 0; i < startingLength; i++)
         {
-            CreateGrowthSegment();
+            CreateStartingSegment(i);
         }
 
         UpdateHeadSprite();
-        UpdateBody();
+        UpdateBodyPositions();
     }
 
 
-    // ==================================================
+    // =========================================================
+    // CREATE STARTING SEGMENT
+    // =========================================================
+
+    void CreateStartingSegment(int segmentIndex)
+    {
+        Vector2Int position =
+            positionHistory[segmentIndex + 1];
+
+        GameObject newSegment = Instantiate(
+            segmentPrefab,
+            GridToWorld(position),
+            Quaternion.identity
+        );
+
+        SnakeBodySegment segment =
+            newSegment.GetComponent<SnakeBodySegment>();
+
+        if (segment != null)
+        {
+            segment.owner = this;
+        }
+
+        segments.Add(newSegment);
+    }
+
+
+    // =========================================================
+    // BODY MOVEMENT
+    // =========================================================
+
+    void UpdateBodyPositions()
+    {
+        if (positionHistory.Count < 2)
+            return;
+
+        /*
+         * The head's movement is:
+         *
+         * previous cell current cell
+         *
+         * The first body segment needs to follow:
+         *
+         * previous head cell  previous head cell's previous cell
+         *
+         * In other words, every body segment follows the
+         * position that was occupied by the segment in front
+         * of it.
+         */
+
+        float moveInterval =
+            1f / Mathf.Max(
+                0.0001f,
+                snakeMovement.movesPerSecond
+            );
+
+        float rawT =
+            Mathf.Clamp01(
+                snakeMovement.MoveTimer / moveInterval
+            );
+
+        float t =
+            Mathf.SmoothStep(0f, 1f, rawT);
+
+
+        for (int i = 0; i < segments.Count; i++)
+        {
+            int currentIndex = i + 1;
+            int previousIndex = i + 2;
+
+            // If there isn't enough history yet, keep the
+            // segment at the last available position.
+            if (currentIndex >= positionHistory.Count)
+                continue;
+
+            Vector2Int currentPosition =
+                positionHistory[currentIndex];
+
+            Vector2Int previousPosition;
+
+            if (previousIndex < positionHistory.Count)
+            {
+                previousPosition =
+                    positionHistory[previousIndex];
+            }
+            else
+            {
+                previousPosition =
+                    currentPosition;
+            }
+
+            Vector3 from =
+                GridToWorld(previousPosition);
+
+            Vector3 to =
+                GridToWorld(currentPosition);
+
+            segments[i].transform.position =
+                Vector3.Lerp(from, to, t);
+
+            UpdateSegmentSprite(
+                i,
+                currentIndex
+            );
+        }
+    }
+
+
+    // =========================================================
     // HEAD SPRITE
-    // ==================================================
+    // =========================================================
 
     void UpdateHeadSprite()
     {
@@ -217,67 +338,37 @@ public class SnakeBody : MonoBehaviour
     }
 
 
-    // ==================================================
-    // UPDATE BODY
-    // ==================================================
+    // =========================================================
+    // SEGMENT SPRITE
+    // =========================================================
 
-    void UpdateBody()
-    {
-        if (positionHistory.Count < 2)
-            return;
-
-        for (int i = 0; i < segments.Count; i++)
-        {
-            int historyIndex = i + 1;
-
-            if (historyIndex >= positionHistory.Count)
-            {
-                historyIndex =
-                    positionHistory.Count - 1;
-            }
-
-            Vector2Int currentPosition =
-                positionHistory[historyIndex];
-
-            segments[i].transform.position =
-                GridToWorld(currentPosition);
-
-            SpriteRenderer renderer =
-                segments[i].GetComponent<SpriteRenderer>();
-
-            if (renderer == null)
-                continue;
-
-            renderer.sprite =
-                GetSegmentSprite(
-                    i,
-                    historyIndex
-                );
-        }
-    }
-
-
-    // ==================================================
-    // GET BODY SPRITE
-    // ==================================================
-
-    Sprite GetSegmentSprite(
+    void UpdateSegmentSprite(
         int segmentIndex,
         int historyIndex)
     {
-        // Last segment is the tail.
+        SpriteRenderer renderer =
+            segments[segmentIndex].GetComponent<SpriteRenderer>();
+
+        if (renderer == null)
+            return;
+
+        // Last segment = tail.
         if (segmentIndex == segments.Count - 1)
         {
-            return GetTailSprite(historyIndex);
+            renderer.sprite =
+                GetTailSprite(historyIndex);
+
+            return;
         }
 
-        return GetBodySprite(historyIndex);
+        renderer.sprite =
+            GetBodySprite(historyIndex);
     }
 
 
-    // ==================================================
+    // =========================================================
     // BODY / CORNER SPRITES
-    // ==================================================
+    // =========================================================
 
     Sprite GetBodySprite(int index)
     {
@@ -306,7 +397,6 @@ public class SnakeBody : MonoBehaviour
         // Vertical
         if ((directionToPrevious == Vector2Int.up &&
              directionToNext == Vector2Int.down) ||
-
             (directionToPrevious == Vector2Int.down &&
              directionToNext == Vector2Int.up))
         {
@@ -317,7 +407,6 @@ public class SnakeBody : MonoBehaviour
         // Horizontal
         if ((directionToPrevious == Vector2Int.left &&
              directionToNext == Vector2Int.right) ||
-
             (directionToPrevious == Vector2Int.right &&
              directionToNext == Vector2Int.left))
         {
@@ -328,7 +417,6 @@ public class SnakeBody : MonoBehaviour
         // Up + Right
         if ((directionToPrevious == Vector2Int.up &&
              directionToNext == Vector2Int.right) ||
-
             (directionToPrevious == Vector2Int.right &&
              directionToNext == Vector2Int.up))
         {
@@ -339,7 +427,6 @@ public class SnakeBody : MonoBehaviour
         // Up + Left
         if ((directionToPrevious == Vector2Int.up &&
              directionToNext == Vector2Int.left) ||
-
             (directionToPrevious == Vector2Int.left &&
              directionToNext == Vector2Int.up))
         {
@@ -350,7 +437,6 @@ public class SnakeBody : MonoBehaviour
         // Down + Right
         if ((directionToPrevious == Vector2Int.down &&
              directionToNext == Vector2Int.right) ||
-
             (directionToPrevious == Vector2Int.right &&
              directionToNext == Vector2Int.down))
         {
@@ -361,7 +447,6 @@ public class SnakeBody : MonoBehaviour
         // Down + Left
         if ((directionToPrevious == Vector2Int.down &&
              directionToNext == Vector2Int.left) ||
-
             (directionToPrevious == Vector2Int.left &&
              directionToNext == Vector2Int.down))
         {
@@ -373,9 +458,9 @@ public class SnakeBody : MonoBehaviour
     }
 
 
-    // ==================================================
+    // =========================================================
     // TAIL SPRITE
-    // ==================================================
+    // =========================================================
 
     Sprite GetTailSprite(int index)
     {
@@ -411,9 +496,9 @@ public class SnakeBody : MonoBehaviour
     }
 
 
-    // ==================================================
-    // GRID TO WORLD
-    // ==================================================
+    // =========================================================
+    // GRID to WORLD
+    // =========================================================
 
     Vector3 GridToWorld(Vector2Int cell)
     {
