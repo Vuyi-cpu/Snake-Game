@@ -37,7 +37,7 @@ public class SnakeDeath : MonoBehaviour
             return;
 
         if (other.CompareTag("Wall") ||
-            other.CompareTag("SnakeHead"))
+            other.CompareTag("SnakeBody") || other.CompareTag("SnakeHead"))
         {
             LoseLife();
         }

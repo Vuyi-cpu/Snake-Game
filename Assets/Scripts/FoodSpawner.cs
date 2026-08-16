@@ -87,8 +87,12 @@ public class FoodSpawner : MonoBehaviour
 
     public void FoodEaten(SnakeMovement snake)
     {
-        // This is the snake that ate the food.
-        // We'll use 'snake' to make that specific snake grow later.
+        SnakeBody body = snake.GetComponent<SnakeBody>();
+
+        if (body != null)
+        {
+            body.Grow();
+        }
 
         SpawnFood();
     }
