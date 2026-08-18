@@ -30,7 +30,7 @@ public class SnakeGameManager : MonoBehaviour
         drawGameOverPanel.SetActive(false);
 
         
-        if (isReplaying)
+        if (isReplaying==true)
         {
             startUI.SetActive(false);
             player1Movement.enabled = true;
