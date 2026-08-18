@@ -38,7 +38,7 @@ public class SnakeDeath : MonoBehaviour
             return;
 
         if (spawnImmunity != null &&
-        spawnImmunity.IsImmune)
+        spawnImmunity.IsImmune && !other.CompareTag("Wall"))
         {
             return;
         }
