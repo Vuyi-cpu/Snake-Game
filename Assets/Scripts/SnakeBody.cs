@@ -35,6 +35,8 @@ public class SnakeBody : MonoBehaviour
 
     private List<GameObject> segments = new List<GameObject>();
 
+    public List<GameObject> Segments => segments;
+
     // Position history.
     // Index 0 = head
     // Index 1 = first body segment
@@ -113,6 +115,13 @@ public class SnakeBody : MonoBehaviour
         // This prevents a new segment from appearing directly
         // on top of the head when food is eaten.
         pendingGrowth++;
+        SnakeSpawnImmunity immunity =
+        GetComponent<SnakeSpawnImmunity>();
+
+        if (immunity != null)
+        {
+            immunity.RefreshVisuals();
+        }
     }
 
 
@@ -204,6 +213,14 @@ public class SnakeBody : MonoBehaviour
 
         UpdateHeadSprite();
         UpdateBodyPositions();
+
+        SnakeSpawnImmunity immunity =
+        GetComponent<SnakeSpawnImmunity>();
+
+        if (immunity != null)
+        {
+            immunity.RefreshVisuals();
+        }
     }
 
 

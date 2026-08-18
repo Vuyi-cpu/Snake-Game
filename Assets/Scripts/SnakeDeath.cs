@@ -17,6 +17,7 @@ public class SnakeDeath : MonoBehaviour
 
     [Header("Respawn")]
     public float respawnDelay = 1f;
+    public SnakeSpawnImmunity spawnImmunity;
 
     [Header("Growth Reset")]
     public UnityEvent onSnakeRespawn;
@@ -35,6 +36,12 @@ public class SnakeDeath : MonoBehaviour
     {
         if (isRespawning || isEliminated)
             return;
+
+        if (spawnImmunity != null &&
+        spawnImmunity.IsImmune)
+        {
+            return;
+        }
 
         if (other.CompareTag("Wall") ||
             other.CompareTag("SnakeBody") || other.CompareTag("SnakeHead"))

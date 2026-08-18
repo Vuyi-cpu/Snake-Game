@@ -7,6 +7,7 @@ public class SnakeMovement : MonoBehaviour
 
     [Header("Player")]
     public InputScheme inputScheme = InputScheme.WASD;
+    public SnakeSpawnImmunity spawnImmunity;
 
     [Header("Grid")]
     public Grid tilemapGrid;              
@@ -98,6 +99,7 @@ public class SnakeMovement : MonoBehaviour
         input = startDirection;
         moveTimer = 0f;
 
+        spawnImmunity.StartImmunity();
         transform.position = GridToWorld(gridPosition);
     }
 

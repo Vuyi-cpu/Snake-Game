@@ -4684,6 +4684,7 @@ GameObject:
   - component: {fileID: 1995698448}
   - component: {fileID: 1995698453}
   - component: {fileID: 1995698454}
+  - component: {fileID: 1995698455}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: SnakeHead
@@ -4704,6 +4705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnakeMovement
   inputScheme: 0
+  spawnImmunity: {fileID: 1995698455}
   tilemapGrid: {fileID: 0}
   startCell: {x: 0, y: 1}
   startDirection: {x: 1, y: 0}
@@ -4876,6 +4878,7 @@ MonoBehaviour:
   gameManager: {fileID: 961337099}
   livesText: {fileID: 1112275622}
   respawnDelay: 0.5
+  spawnImmunity: {fileID: 1995698455}
   onSnakeRespawn:
     m_PersistentCalls:
       m_Calls:
@@ -4921,6 +4924,19 @@ MonoBehaviour:
   tailDown: {fileID: 2750249231403333431, guid: 778c08ee49da8cc41b60cef8dddd552c, type: 3}
   tailLeft: {fileID: -6108097152939252179, guid: ef083b619afffac408862caf8bbfb485, type: 3}
   tailRight: {fileID: -2542272835747916194, guid: 8c83df1d6cc46fb48bf796a0f8f37f98, type: 3}
+--- !u!114 &1995698455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995698447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f879dc37df6ce884381e60f9a251545f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SnakeSpawnImmunity
+  immunityDuration: 2
 --- !u!1 &2011750635
 GameObject:
   m_ObjectHideFlags: 0
@@ -12097,6 +12113,7 @@ GameObject:
   - component: {fileID: 2030534261}
   - component: {fileID: 2030534266}
   - component: {fileID: 2030534267}
+  - component: {fileID: 2030534268}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: SnakeHead
@@ -12117,6 +12134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnakeMovement
   inputScheme: 1
+  spawnImmunity: {fileID: 2030534268}
   tilemapGrid: {fileID: 0}
   startCell: {x: 0, y: -1}
   startDirection: {x: 1, y: 0}
@@ -12289,6 +12307,7 @@ MonoBehaviour:
   gameManager: {fileID: 961337099}
   livesText: {fileID: 459441342}
   respawnDelay: 0.5
+  spawnImmunity: {fileID: 2030534268}
   onSnakeRespawn:
     m_PersistentCalls:
       m_Calls:
@@ -12334,6 +12353,19 @@ MonoBehaviour:
   tailDown: {fileID: 2750249231403333431, guid: bc081060bb5743d48bc9c57929a9cb15, type: 3}
   tailLeft: {fileID: -6108097152939252179, guid: ac519439d19c65148b254c9b0b977c2a, type: 3}
   tailRight: {fileID: -2542272835747916194, guid: d7ff86112212e8d41970666f90e43ee0, type: 3}
+--- !u!114 &2030534268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030534260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f879dc37df6ce884381e60f9a251545f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SnakeSpawnImmunity
+  immunityDuration: 2
 --- !u!1 &2050039180
 GameObject:
   m_ObjectHideFlags: 0
