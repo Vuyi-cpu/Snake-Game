@@ -12,17 +12,37 @@ public class SnakeGameManager : MonoBehaviour
     public GameObject brownGameOverPanel;
     public GameObject blueGameOverPanel;
     public GameObject drawGameOverPanel;
+    
+    public GameObject startUI;
 
     private bool player1Lost;
     private bool player2Lost;
     private bool gameHasEnded;
     private bool resultCheckStarted;
 
+    
+    private static bool isReplaying = false; 
+
     void Start()
     {
         brownGameOverPanel.SetActive(false);
         blueGameOverPanel.SetActive(false);
         drawGameOverPanel.SetActive(false);
+
+        
+        if (isReplaying)
+        {
+            startUI.SetActive(false);
+            player1Movement.enabled = true;
+            player2Movement.enabled = true;
+        }
+        else
+        {
+           
+            startUI.SetActive(true);
+            player1Movement.enabled = false;
+            player2Movement.enabled = false;
+        }
     }
 
     public void GameOver(int losingPlayer)
@@ -39,7 +59,6 @@ public class SnakeGameManager : MonoBehaviour
             player2Lost = true;
         }
 
-     
         player1Movement.enabled = false;
         player2Movement.enabled = false;
 
@@ -62,19 +81,26 @@ public class SnakeGameManager : MonoBehaviour
         }
         else if (player1Lost)
         {
-           
             brownGameOverPanel.SetActive(true);
         }
         else if (player2Lost)
         {
-  
             blueGameOverPanel.SetActive(true);
         }
     }
 
     public void ReplayGame()
     {
+        
+        isReplaying = true; 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void StartGame()
+    {
+        startUI.SetActive(false);
+        player1Movement.enabled = true;
+        player2Movement.enabled = true;
     }
 
     public void ExitGame()

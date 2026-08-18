@@ -1220,7 +1220,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &561513840
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2121,7 +2121,7 @@ RectTransform:
   m_GameObject: {fileID: 699226613}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.104, y: 3.104, z: 3.104}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 355102136}
@@ -2175,7 +2175,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 699226616}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 961337099}
+        m_TargetAssemblyTypeName: SnakeGameManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &699226616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2597,6 +2609,7 @@ MonoBehaviour:
   brownGameOverPanel: {fileID: 573343950}
   blueGameOverPanel: {fileID: 1422148865}
   drawGameOverPanel: {fileID: 607700003}
+  startUI: {fileID: 561513839}
 --- !u!4 &961337100
 Transform:
   m_ObjectHideFlags: 0
@@ -2640,7 +2653,7 @@ RectTransform:
   m_GameObject: {fileID: 962605285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.1656, y: 3.1656, z: 3.1656}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 558560998}
@@ -2648,7 +2661,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -158.05}
+  m_AnchoredPosition: {x: 0, y: -190}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &962605287
@@ -2694,7 +2707,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 962605288}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 961337099}
+        m_TargetAssemblyTypeName: SnakeGameManager, Assembly-CSharp
+        m_MethodName: ExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &962605288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3807,14 +3832,14 @@ RectTransform:
   m_GameObject: {fileID: 1596358651}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5922, y: 1.5922, z: 1.5922}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 561513840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 44.51, y: 322.2}
+  m_AnchoredPosition: {x: 239, y: 322.2}
   m_SizeDelta: {x: 460.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1596358653
@@ -3903,7 +3928,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -97.1051, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4131,14 +4156,14 @@ RectTransform:
   m_GameObject: {fileID: 1736018914}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.3426, y: 3.3426, z: 3.3426}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 561513840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 394.4}
+  m_AnchoredPosition: {x: 279, y: 394.4}
   m_SizeDelta: {x: 460.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1736018916
