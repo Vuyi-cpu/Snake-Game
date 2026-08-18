@@ -40,7 +40,8 @@ public class SnakeBody : MonoBehaviour
     // Index 1 = first body segment
     // Index 2 = second body segment
     // etc.
-    private List<Vector2Int> positionHistory = new List<Vector2Int>();
+    private List<Vector2Int> positionHistory =
+        new List<Vector2Int>();
 
     private Vector2Int lastHeadPosition;
 
@@ -90,6 +91,11 @@ public class SnakeBody : MonoBehaviour
                 CreateGrowthSegment();
                 pendingGrowth--;
             }
+
+            // NEW:
+            // The snake has now actually moved.
+            // Enable collisions on all body segments.
+            EnableSegmentCollisions();
         }
 
         UpdateBodyPositions();
@@ -104,8 +110,8 @@ public class SnakeBody : MonoBehaviour
     {
         // Don't create a segment immediately.
         //
-        // This prevents a new segment from appearing on top
-        // of the head when food is eaten.
+        // This prevents a new segment from appearing directly
+        // on top of the head when food is eaten.
         pendingGrowth++;
     }
 
@@ -139,6 +145,11 @@ public class SnakeBody : MonoBehaviour
         if (segment != null)
         {
             segment.owner = this;
+
+            // NEW:
+            // The new segment should not immediately count
+            // its initial overlap as a collision.
+            segment.DisableCollision();
         }
 
         segments.Add(newSegment);
@@ -217,9 +228,36 @@ public class SnakeBody : MonoBehaviour
         if (segment != null)
         {
             segment.owner = this;
+
+            // NEW:
+            // Starting segments cannot cause a collision
+            // just because they spawned next to each other.
+            segment.DisableCollision();
         }
 
         segments.Add(newSegment);
+    }
+
+
+    // =========================================================
+    // NEW - ENABLE BODY COLLISIONS
+    // =========================================================
+
+    void EnableSegmentCollisions()
+    {
+        foreach (GameObject segment in segments)
+        {
+            if (segment == null)
+                continue;
+
+            SnakeBodySegment bodySegment =
+                segment.GetComponent<SnakeBodySegment>();
+
+            if (bodySegment != null)
+            {
+                bodySegment.EnableCollision();
+            }
+        }
     }
 
 
@@ -232,20 +270,6 @@ public class SnakeBody : MonoBehaviour
         if (positionHistory.Count < 2)
             return;
 
-        /*
-         * The head's movement is:
-         *
-         * previous cell current cell
-         *
-         * The first body segment needs to follow:
-         *
-         * previous head cell  previous head cell's previous cell
-         *
-         * In other words, every body segment follows the
-         * position that was occupied by the segment in front
-         * of it.
-         */
-
         float moveInterval =
             1f / Mathf.Max(
                 0.0001f,
@@ -257,8 +281,10 @@ public class SnakeBody : MonoBehaviour
                 snakeMovement.MoveTimer / moveInterval
             );
 
-        float t =
-            Mathf.SmoothStep(0f, 1f, rawT);
+        // NEW:
+        // Linear interpolation keeps the head and body
+        // moving at exactly the same rate.
+        float t = rawT;
 
 
         for (int i = 0; i < segments.Count; i++)
@@ -497,7 +523,7 @@ public class SnakeBody : MonoBehaviour
 
 
     // =========================================================
-    // GRID to WORLD
+    // GRID TO WORLD
     // =========================================================
 
     Vector3 GridToWorld(Vector2Int cell)
